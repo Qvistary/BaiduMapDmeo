@@ -16,12 +16,15 @@ import java.util.List;
 public class BaseActivity extends AppCompatActivity {
 
     private View layoutRoot;
+    private String permission_warning;
 
-    public void request_Permission(String[] permissions, View view) {
+
+    public void request_Permission(String[] permissions, View view, String text) {
+        this.permission_warning = text;
         this.layoutRoot = view;
         List<String> permissionList = new ArrayList<>();
         for (int i = 0; i < permissions.length; i++) {
-            if (ContextCompat.checkSelfPermission(BaseActivity.this, permissions[i])
+            if (ContextCompat.checkSelfPermission(this, permissions[i])
                     != PackageManager.PERMISSION_GRANTED) {
                 permissionList.add(permissions[i]);
             }
@@ -30,6 +33,7 @@ public class BaseActivity extends AppCompatActivity {
             String[] permission_list = permissionList.toArray(new String[permissionList.size()]);
             ActivityCompat.requestPermissions(this, permission_list, 1);
         }
+
 
     }
 
@@ -42,16 +46,16 @@ public class BaseActivity extends AppCompatActivity {
                         if (result != PackageManager.PERMISSION_GRANTED) {
                             if (ActivityCompat.shouldShowRequestPermissionRationale(BaseActivity.this,
                                     permissions[0])) {
-                                Snackbar.make(layoutRoot, "你需要同意软件请求的权限！", Snackbar.LENGTH_SHORT).setAction(
+                                Snackbar.make(layoutRoot, permission_warning, Snackbar.LENGTH_LONG).setAction(
                                         "去请求", new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
-                                                request_Permission(permissions, layoutRoot);
+                                                request_Permission(permissions, layoutRoot, permission_warning);
                                             }
                                         }
                                 ).show();
                             } else {
-                                Snackbar.make(layoutRoot, "你需要同意软件请求的权限！", Snackbar.LENGTH_SHORT).setAction(
+                                Snackbar.make(layoutRoot, permission_warning, Snackbar.LENGTH_LONG).setAction(
                                         "去设置", new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
@@ -66,16 +70,12 @@ public class BaseActivity extends AppCompatActivity {
                                             }
                                         }
                                 ).show();
-
                             }
-
-
                             break;
                         }
                 }
                 break;
             }
-
         }
     }
 }
