@@ -2,6 +2,7 @@ package top.qvisa.baidumapdmeo;
 
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,6 +18,7 @@ public class MainActivity extends LocationActivity {
     private Toolbar toolbar;
     private BaiduMap mBaiduMap;
     private CoordinatorLayout coordinatorLayout;
+    private FloatingActionButton mFloatingActionButton_location;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,13 +30,18 @@ public class MainActivity extends LocationActivity {
         mBaiduMap = mapView.getMap();
         mBaiduMap.setMyLocationEnabled(true);
         request_Location(coordinatorLayout,mBaiduMap);
-
     }
 
     public void init_View() {
         toolbar = findViewById(R.id.toolbar);
         mapView = findViewById(R.id.mv_MapView);
         coordinatorLayout = findViewById(R.id.layout_coordinator);
+        mFloatingActionButton_location = findViewById(R.id.FaBt_location);
+    }
+
+    public void FaBt_Click_location(View view){
+        isFirst_Location = true;
+        request_Location(coordinatorLayout,mBaiduMap);
     }
 
     private void init_Toolbar() {

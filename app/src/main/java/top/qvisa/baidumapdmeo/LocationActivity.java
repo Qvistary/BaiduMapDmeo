@@ -1,8 +1,6 @@
 package top.qvisa.baidumapdmeo;
 
 import android.Manifest;
-import android.content.pm.PackageManager;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 
@@ -18,19 +16,18 @@ import com.baidu.mapapi.model.LatLng;
 
 public class LocationActivity extends BaseActivity {
     private String[] permissions = {
-            //  Manifest.permission.READ_PHONE_STATE,//电话
-            // Manifest.permission.WRITE_EXTERNAL_STORAGE,//存储
+          //  Manifest.permission.READ_PHONE_STATE,//电话
+          //  Manifest.permission.WRITE_EXTERNAL_STORAGE,//存储
             Manifest.permission.ACCESS_FINE_LOCATION//定位权限
     };
 
     private final static String TAG = "MainActivity";
     public LocationClient mLocationClient;
-    BaiduMap mBaiduMap;
-    private boolean isFirst_Location = true;
+    private BaiduMap mBaiduMap;
+    public boolean isFirst_Location = true;
 
-    public void request_Location(View view ,BaiduMap baiduMap) {
+    public void request_Location(View view, BaiduMap baiduMap) {
         this.mBaiduMap = baiduMap;
-        request_Permission(permissions, view, "注意：你需要同意软件获取位置权限！");
         mLocationClient = new LocationClient(getApplicationContext());
         mLocationClient.registerLocationListener(new MyLocationListener());
         //声明LocationClient类实例并配置定位参数
@@ -40,22 +37,27 @@ public class LocationActivity extends BaseActivity {
         //可选，默认gcj02，设置返回的定位结果坐标系，如果配合百度地图使用，建议设置为bd09ll;
         locationOption.setCoorType("bd09ll");
         mLocationClient.setLocOption(locationOption);
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-            mLocationClient.start();
-        }
+        requestPermission(view);
+    }
+    private void requestPermission(View view){
+        request_Permission(permissions, view, "注意：你需要同意软件获取位置权限！", new PermissionListen() {
+            @Override
+            public void onGranted() {
+                mLocationClient.start();
+            }
+        });
     }
 
     private void navigateTo(BDLocation bdLocation) {
-        if (isFirst_Location){
-            LatLng latLng = new LatLng(bdLocation.getLatitude(),bdLocation.getLongitude());
+        if (isFirst_Location) {
+            LatLng latLng = new LatLng(bdLocation.getLatitude(), bdLocation.getLongitude());
             MapStatusUpdate update = MapStatusUpdateFactory.newLatLng(latLng);
             mBaiduMap.animateMapStatus(update);
-            update =MapStatusUpdateFactory.zoomTo(18f);
+            update = MapStatusUpdateFactory.zoomTo(18f);
             mBaiduMap.animateMapStatus(update);
-            isFirst_Location =false;
+            isFirst_Location = false;
         }
-        MyLocationData.Builder builder =new MyLocationData.Builder();
+        MyLocationData.Builder builder = new MyLocationData.Builder();
         builder.latitude(bdLocation.getLatitude());
         builder.longitude(bdLocation.getLongitude());
         MyLocationData locationData = builder.build();
@@ -67,9 +69,9 @@ public class LocationActivity extends BaseActivity {
         @Override
         public void onReceiveLocation(BDLocation location) {
             //获取纬度信息
-            double  latitude = location.getLatitude();
+            double latitude = location.getLatitude();
             //获取经度信息
-            double  longitude = location.getLongitude();
+            double longitude = location.getLongitude();
             Log.d(TAG, "纬度信息>>>" + latitude);
             Log.d(TAG, "经度信息>>>" + longitude);
             //获取定位类型、定位错误返回码，具体信息可参照类参考中BDLocation类中的说明
@@ -79,8 +81,7 @@ public class LocationActivity extends BaseActivity {
                 Log.d(TAG, "NETWORK");
             }
 
-            if(location.getLocType()==BDLocation.TypeNetWorkLocation||location.getLocType()==BDLocation.TypeGpsLocation)
-            {
+            if (location.getLocType() == BDLocation.TypeNetWorkLocation || location.getLocType() == BDLocation.TypeGpsLocation) {
                 navigateTo(location);
             }
         }

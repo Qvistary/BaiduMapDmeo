@@ -4,5 +4,7 @@
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
     <color name="colorToolBarText">#33010101</color>
+    <color name="FaButtonColor">#FFFFFF</color>
+    <color name="FaBtClickColor">#AECDCDCD</color>
 
 </resources>

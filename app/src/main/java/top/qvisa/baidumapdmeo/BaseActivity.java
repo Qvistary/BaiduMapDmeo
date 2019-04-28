@@ -9,6 +9,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,9 +18,11 @@ public class BaseActivity extends AppCompatActivity {
 
     private View layoutRoot;
     private String permission_warning;
+    private PermissionListen mPermissionListen;
 
 
-    public void request_Permission(String[] permissions, View view, String text) {
+    public void request_Permission(String[] permissions, View view, String text,PermissionListen listener) {
+        this.mPermissionListen = listener;
         this.permission_warning = text;
         this.layoutRoot = view;
         List<String> permissionList = new ArrayList<>();
@@ -32,9 +35,9 @@ public class BaseActivity extends AppCompatActivity {
         if (!permissionList.isEmpty()) {
             String[] permission_list = permissionList.toArray(new String[permissionList.size()]);
             ActivityCompat.requestPermissions(this, permission_list, 1);
+        } else {
+            mPermissionListen.onGranted();
         }
-
-
     }
 
     public void onRequestPermissionsResult(int requestCode, final String[] permissions, int[] grantResults) {
@@ -42,7 +45,7 @@ public class BaseActivity extends AppCompatActivity {
         switch (requestCode) {
             case 1: {
                 if (grantResults.length > 0) {
-                    for (int result : grantResults)
+                    for (int result : grantResults) {
                         if (result != PackageManager.PERMISSION_GRANTED) {
                             if (ActivityCompat.shouldShowRequestPermissionRationale(BaseActivity.this,
                                     permissions[0])) {
@@ -50,7 +53,7 @@ public class BaseActivity extends AppCompatActivity {
                                         "去请求", new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
-                                                request_Permission(permissions, layoutRoot, permission_warning);
+                                                request_Permission(permissions, layoutRoot, permission_warning,mPermissionListen);
                                             }
                                         }
                                 ).show();
@@ -71,11 +74,21 @@ public class BaseActivity extends AppCompatActivity {
                                         }
                                 ).show();
                             }
-                            break;
+                            return;
                         }
+                    }
+                    mPermissionListen.onGranted();
+                }else {
+                    Toast.makeText(this,"发生未知错误",Toast.LENGTH_SHORT).show();
+                    finish();
                 }
                 break;
             }
         }
     }
+
+    public interface PermissionListen {
+        void onGranted();//已授权
+    }
+
 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/layout_coordinator"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -24,5 +25,20 @@
 
     </com.baidu.mapapi.map.MapView>
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/FaBt_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="40dp"
+        android:layout_marginStart="16dp"
+        android:backgroundTintMode="multiply"
+        android:src="@drawable/baseline_my_location_24"
+        app:backgroundTint="@color/FaButtonColor"
+        app:fabSize="mini"
+        android:elevation="8dp"
+        android:onClick="FaBt_Click_location"
+        app:rippleColor="@color/FaBtClickColor"
+        />
 </android.support.design.widget.CoordinatorLayout>
 
