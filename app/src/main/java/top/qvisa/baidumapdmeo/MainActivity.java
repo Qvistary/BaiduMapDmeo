@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
+import android.widget.ZoomControls;
 
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
@@ -28,8 +29,10 @@ public class MainActivity extends LocationActivity {
         init_View();
         init_Toolbar();
         mBaiduMap = mapView.getMap();
-        mBaiduMap.setMyLocationEnabled(true);
-        request_Location(coordinatorLayout,mBaiduMap);
+        //设置缩放控件的位置
+        mapView.getChildAt(2).setPadding(0, 0, 0, 500);
+        //请求定位
+        request_Location(coordinatorLayout, mBaiduMap);
     }
 
     public void init_View() {
@@ -39,9 +42,9 @@ public class MainActivity extends LocationActivity {
         mFloatingActionButton_location = findViewById(R.id.FaBt_location);
     }
 
-    public void FaBt_Click_location(View view){
+    public void FaBt_Click_location(View view) {
         isFirst_Location = true;
-        request_Location(coordinatorLayout,mBaiduMap);
+        request_Location(coordinatorLayout, mBaiduMap);
     }
 
     private void init_Toolbar() {
@@ -67,12 +70,22 @@ public class MainActivity extends LocationActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.Change_mapView:
-                if (mBaiduMap.getMapType()==BaiduMap.MAP_TYPE_SATELLITE){
+                if (mBaiduMap.getMapType() == BaiduMap.MAP_TYPE_SATELLITE) {
                     mBaiduMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);
-                }else {
+                    item.setTitle("卫星地图");
+                } else {
                     mBaiduMap.setMapType(BaiduMap.MAP_TYPE_SATELLITE);
+                    item.setTitle("平面地图");
                 }
                 break;
+            case R.id.traffic_mapView:
+                if (mBaiduMap.isTrafficEnabled()) {
+                    mBaiduMap.setTrafficEnabled(false);
+                    item.setChecked(false);
+                } else {
+                    mBaiduMap.setTrafficEnabled(true);
+                    item.setChecked(true);
+                }
         }
         return true;
     }

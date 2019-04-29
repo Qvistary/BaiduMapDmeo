@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/Change_mapView" android:title="切换视图"/>
+    <item
+        android:id="@+id/Change_mapView"
+        android:title="卫星地图" />
+    <item
+        android:id="@+id/traffic_mapView"
+        android:checkable="true"
+        android:checked="true"
+        android:title="实时路况"
+        />
 </menu>
