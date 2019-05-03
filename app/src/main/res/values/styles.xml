@@ -14,4 +14,6 @@
     </style>
 
     <style name="MapViewTheme" parent="AppTheme"></style>
+    <style name="SearchViewTheme" parent="AppTheme"></style>
+
 </resources>

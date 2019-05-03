@@ -1,9 +1,11 @@
 package top.qvisa.baidumapdmeo;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -44,7 +46,7 @@ public class MainActivity extends LocationActivity {
 
     public void FaBt_Click_location(View view) {
         isFirst_Location = true;
-        request_Location(coordinatorLayout, mBaiduMap);
+        mLocationClient.requestLocation();
     }
 
     private void init_Toolbar() {
@@ -55,6 +57,8 @@ public class MainActivity extends LocationActivity {
         toolbar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,SearchActivity.class);
+                startActivity(intent);
                 Toast.makeText(MainActivity.this, "你点击了搜索", Toast.LENGTH_SHORT).show();
             }
         });
